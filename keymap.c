@@ -30,48 +30,60 @@
 
 
 
-enum unicode_names {
-    MY_AMPR,
-    MY_7
-};
-
-// first 128 entries in the map can be used with the XP feature
-const uint32_t PROGMEM unicode_map[] = {
-    [MY_AMPR]  = 0x0026,  // &
-    [MY_7] = 0x0037,  // 7
-};
-
-// creating a handy shortname to use in keymap; not strictly necessary
-#define AMPR_7 XP(MY_AMPR, MY_7)
-
-
-
-
 enum custom_keycodes {
   QMKBEST = SAFE_RANGE,
   QMKURL,
   LANG,
   SHIFT,
   MY__7,
-  MY_OTHER_MACRO
+  MY_OTHER_MACRO,
+
+  MY_1 = SAFE_RANGE,
+  MY_2,
+  MY_3
 };
 
+uint16_t alt_keymap[2][3] = {{KC_EXCLAIM, KC_A, KC_AMPR},{KC_1, KC_ASTR, KC_7}};
+/* unshifted       shifted
+ * !                   1
+ * a                   *
+ * &                   7
+ */
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
   const uint8_t mod_state = get_mods();
-  switch (keycode) {
-    case MY__7:
-        if (record->event.pressed) {
-            if(get_mods() & MOD_MASK_SHIFT)
-            {
-                clear_mods();
-                tap_code(KC_7);
-                set_mods(mod_state);
-            } else {
-                tap_code(KC_G);
-            }
+  switch (keycode)
+  {
+    case MY_1 ... MY_3:
+      if (record->event.pressed)
+      {
+        mod_state = get_mods() & MOD_MASK_SHIFT;
+        clear_mods();
+        if(mod_state)
+        {
+          tap_code16(alt_keymap[1][keycode - MY_1]);
         }
-        break;
+        else
+        {
+          tap_code16(alt_keymap[0][keycode - MY_1]);
+        }
+        set_mods(mod_state);
+      }
+      break;
+
+    // case MY__7:
+    //     if (record->event.pressed) {
+    //         if(get_mods() & MOD_MASK_SHIFT)
+    //         {
+    //             clear_mods();
+    //             tap_code(KC_7);
+    //             set_mods(mod_state);
+    //         } else {
+    //             tap_code(KC_G);
+    //         }
+    //     }
+    //     break;
 
     case QMKBEST:
         if (record->event.pressed) {
@@ -124,7 +136,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TT(NUM),     S(KC_1),  S(KC_2),  S(KC_3),  S(KC_4), S(KC_5), S(KC_6), S(KC_7), S(KC_8), S(KC_9),  S(KC_0),  KC_UNDS,  KC_COLN,  KC_DQUO,  KC_BSLS,
         KC_TAB,           KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  S(KC_LBRC),  KC_BSPC,
         KC_GESC,            KC_A,       KC_S,    KC_D,    KC_F,    KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,  KC_ENT,
-        KC_LSHIFT,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  AMPR_7,  TT(LAT_UP),
+        KC_LSHIFT,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  _______,  TT(LAT_UP),
         KC_LCTL,        KC_LGUI,          KC_LALT,    MO(NAV),    KC_ENT,                 KC_SPC,                 MO(NUM),    KC_GRV,   TG(NUM),    KC_RGHT,  KC_WH_D),
 
     [LAT_UP] = LAYOUT(
