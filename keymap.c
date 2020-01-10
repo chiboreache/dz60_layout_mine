@@ -19,6 +19,8 @@
 / k30, k31, k32, k33, k34, k35, k36, k37, k38, k39, k3a, k3b,      k3d, k3e, \
 / k40, k41,      k43, k44,      k46,      k48,      k4a, k4b, k4c, k4d, k4e  \
 */
+
+
 #define LAT     0
 #define LAT_UP  1
 
@@ -31,66 +33,94 @@
 
 
 enum custom_keycodes {
-  QMKBEST = SAFE_RANGE,
+  SMILEK = SAFE_RANGE,
   QMKURL,
   LANG,
-  SHIFT,
-  MY__7,
   MY_OTHER_MACRO,
-
-  MY_1 = SAFE_RANGE,
-  MY_2,
-  MY_3
 };
 
-uint16_t alt_keymap[2][3] = {{KC_EXCLAIM, KC_A, KC_AMPR},{KC_1, KC_ASTR, KC_7}};
-/* unshifted       shifted
- * !                   1
- * a                   *
- * &                   7
- */
+enum shifted_keycodes {
+//   start,
+  AKM_1_9,
+  AKM_1_10,
+  AKM_1_11,
+  AKM_1_12,
+  AKM_1_13,
+  AKM_1_14,
+
+  AKM_2_22,
+  AKM_2_23,
+
+  AKM_3_11,
+
+  AKM_4_11,
+//   end,
+};
+
+
+// const int len_enum = end - start + 1;
+// uint16_t alt_keymap[2][len_enum] = {
+uint16_t alt_keymap[2][10] = {
+        {
+            KC_LEFT_PAREN,
+            KC_UNDERSCORE,
+            KC_MINUS,
+            KC_EQUAL,
+            KC_DOUBLE_QUOTE,
+            KC_LEFT_ANGLE_BRACKET,
+
+            KC_LBRACKET,
+            KC_LEFT_CURLY_BRACE,
+
+            KC_COLON,
+
+            KC_SLASH,
+        },
+        {
+            KC_RIGHT_PAREN,
+            KC_UNDERSCORE,
+            KC_MINUS,
+            KC_EQUAL,
+            KC_BSLASH,
+            KC_RIGHT_ANGLE_BRACKET,
+
+            KC_RBRACKET,
+            KC_RIGHT_CURLY_BRACE,
+
+            KC_SCOLON,
+
+            KC_PIPE,
+        }
+};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
-  const uint8_t mod_state = get_mods();
+  uint8_t mod_state = get_mods();
   switch (keycode)
   {
-    case MY_1 ... MY_3:
+    case AKM_1_9 ... AKM_4_11:
       if (record->event.pressed)
       {
         mod_state = get_mods() & MOD_MASK_SHIFT;
         clear_mods();
         if(mod_state)
         {
-          tap_code16(alt_keymap[1][keycode - MY_1]);
+          tap_code16(alt_keymap[1][keycode - AKM_1_9]);
         }
         else
         {
-          tap_code16(alt_keymap[0][keycode - MY_1]);
+          tap_code16(alt_keymap[0][keycode - AKM_1_9]);
         }
         set_mods(mod_state);
       }
       break;
 
-    // case MY__7:
-    //     if (record->event.pressed) {
-    //         if(get_mods() & MOD_MASK_SHIFT)
-    //         {
-    //             clear_mods();
-    //             tap_code(KC_7);
-    //             set_mods(mod_state);
-    //         } else {
-    //             tap_code(KC_G);
-    //         }
-    //     }
-    //     break;
-
-    case QMKBEST:
+    case SMILEK:
         if (record->event.pressed) {
-        // when keycode QMKBEST is pressed
-        SEND_STRING("QMK is the best thing ever!");
+        // when keycode SMILEK is pressed
+        SEND_STRING("¯\\_(ツ)_/¯");
         } else {
-        // when keycode QMKBEST is released
+        // when keycode SMILEK is released
         }
         break;
 
@@ -116,27 +146,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         }
         break;
 
-    // case SHIFT:
-    //   if (record->event.pressed) {
-    //             tap_code16(LM(LAT_UP, MOD_LSFT));
-    //   } else {
-    //             layer_invert(LAT);
-    //   }
-    //   break;
-
-
   }
   return true;
 };
 
 
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAT] = LAYOUT(
-        TT(NUM),     S(KC_1),  S(KC_2),  S(KC_3),  S(KC_4), S(KC_5), S(KC_6), S(KC_7), S(KC_8), S(KC_9),  S(KC_0),  KC_UNDS,  KC_COLN,  KC_DQUO,  KC_BSLS,
-        KC_TAB,           KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  S(KC_LBRC),  KC_BSPC,
-        KC_GESC,            KC_A,       KC_S,    KC_D,    KC_F,    KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,  KC_ENT,
-        KC_LSHIFT,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  _______,  TT(LAT_UP),
+        KC_GRAVE,     KC_EXCLAIM,  KC_AT,  KC_HASH,  KC_DOLLAR, KC_PERCENT, KC_CIRCUMFLEX, KC_QUESTION, KC_ASTERISK, AKM_1_9,  AKM_1_10, AKM_1_11,  AKM_1_12,  AKM_1_13,  AKM_1_14,
+        KC_TAB,           KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     AKM_2_22,  AKM_2_23,  KC_BSPC,
+        KC_GESC,            KC_A,       KC_S,    KC_D,    KC_F,    KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     AKM_3_11,  KC_QUOT,  KC_ENT,
+        KC_LSHIFT,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   AKM_4_11,  _______,  TT(LAT_UP),
         KC_LCTL,        KC_LGUI,          KC_LALT,    MO(NAV),    KC_ENT,                 KC_SPC,                 MO(NUM),    KC_GRV,   TG(NUM),    KC_RGHT,  KC_WH_D),
 
     [LAT_UP] = LAYOUT(
@@ -157,43 +177,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         SMILE,     UC(0xBD20),  RUB_SIGN,   UNICODE_MODE_LNX,   UNICODE_MODE_WIN,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   KC_P0,   RESET,
         _______,   _______,     KC_VOLU,   _______,    KC_PGUP,   _______,   _______,   KC_PGUP,   _______,   KC_UP,   _______,   _______,   _______,   _______,   _______,
         KC_MPRV,   KC_VOLD,     KC_MNXT,   KC_DEL,     KC_HOME,   KC_END,   KC_BSPC,   KC_LEFT,   KC_DOWN,   KC_RGHT,   _______,   _______,
-        _______,   XXXXXXX,     QMKBEST,   QMKURL,    MY_OTHER_MACRO,   KC_PGDN,   _______,   _______,   KC_PGDN,   _______,   _______,   _______,   LANG,   _______,
+        _______,   XXXXXXX,     SMILEK,   QMKURL,    MY_OTHER_MACRO,   KC_PGDN,   _______,   _______,   KC_PGDN,   _______,   _______,   _______,   LANG,   _______,
         _______,   _______,     _______,   _______,    _______,   _______,   _______,   _______,   _______,   _______,   _______),
 
 };
 
-
-
-// KEYMAP(
-//  LT(1, TG(1)), KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_LABK, KC_UNDS, KC_PIPE, KC_BSLS, KC_DEL,
-//  KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_LCBR, KC_BSPC,
-//  KC_GESC, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_COLN, KC_QUOT, KC_ENT,
-//  SFT_T(KC_CAPS), _______, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, MO(3),
-//  KC_LCTL, KC_LGUI, KC_LALT, MO(2), KC_ENT, KC_SPC, KC_RALT, KC_F19, KC_APP, MO(1), KC_PSCR),
-
-// KEYMAP(
-//  _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, _______, _______,
-//  TO(0), _______, KC_VOLU, _______, KC_PGUP, KC_PGDN, _______, KC_MINS, KC_7, KC_8, KC_9, KC_PSLS, KC_PAST, _______,
-//  _______, KC_MPRV, KC_VOLD, KC_MNXT, _______, _______, _______, _______, KC_4, KC_5, KC_6, _______, KC_EQL,
-//  _______, _______, _______, _______, _______, KC_HOME, KC_END, _______, KC_PPLS, KC_1, KC_2, KC_3, _______, _______,
-//  _______, _______, _______, _______, _______, _______, KC_0, KC_PDOT, _______, _______, _______),
-
-// KEYMAP(
-//  _______, KC_P0, KC_P0, KC_INS, KC_P0, KC_P0, KC_P0, KC_P0, KC_P0, KC_P0, KC_P0, KC_P0, KC_P0, KC_P0, KC_P0,
-//  _______, _______, KC_UP, _______, KC_PGUP, _______, _______, KC_PGUP, _______, KC_UP, _______, _______, _______, _______,
-//  _______, M(1), KC_DOWN, M(0), KC_DEL, KC_HOME, KC_END, KC_BSPC, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______,
-//  _______, _______, _______, _______, _______, KC_PGDN, _______, _______, KC_PGDN, _______, _______, _______, _______, _______,
-//  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
-
-// KEYMAP(
-//  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,
-//  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-//  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-//  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-//  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
-
-
-
-// void eeconfig_init_user(void) {
-//     set_unicode_input_mode(UC_LNX);
-// }
