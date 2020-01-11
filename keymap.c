@@ -22,13 +22,10 @@
 
 
 #define LAT     0
-#define LAT_UP  1
+#define RUS     1
 
-#define RUS     2
-#define RUS_UP  3
-
-#define NUM     4
-#define NAV     5
+#define FN     2
+#define NAV     3
 
 
 
@@ -42,18 +39,19 @@ enum custom_keycodes {
 enum shifted_keycodes {
 //   start,
   AKM_1_9,
-  AKM_1_10,
-  AKM_1_11,
-  AKM_1_12,
-  AKM_1_13,
+//   AKM_1_10,
+//   AKM_1_11,
+//   AKM_1_12,
+//   AKM_1_13,
   AKM_1_14,
 
   AKM_2_22,
   AKM_2_23,
+//   M_CYR_ER,
 
-  AKM_3_11,
+//   AKM_3_11,
 
-  AKM_4_11,
+//   AKM_4_11,
 //   end,
 };
 
@@ -63,33 +61,35 @@ enum shifted_keycodes {
 uint16_t alt_keymap[2][10] = {
         {
             KC_LEFT_PAREN,
-            KC_UNDERSCORE,
-            KC_MINUS,
-            KC_EQUAL,
-            KC_DOUBLE_QUOTE,
+            // KC_UNDERSCORE,
+            // KC_MINUS,
+            // KC_EQUAL,
+            // KC_DOUBLE_QUOTE,
             KC_LEFT_ANGLE_BRACKET,
 
             KC_LBRACKET,
             KC_LEFT_CURLY_BRACE,
+            // KC_M,
 
-            KC_COLON,
+            // KC_COLON,
 
-            KC_SLASH,
+            // KC_SLASH,
         },
         {
             KC_RIGHT_PAREN,
-            KC_UNDERSCORE,
-            KC_MINUS,
-            KC_EQUAL,
-            KC_BSLASH,
+            // KC_UNDERSCORE,
+            // KC_MINUS,
+            // KC_EQUAL,
+            // KC_BSLASH,
             KC_RIGHT_ANGLE_BRACKET,
 
             KC_RBRACKET,
             KC_RIGHT_CURLY_BRACE,
+            // KC_RBRACKET,
 
-            KC_SCOLON,
+            // KC_SCOLON,
 
-            KC_PIPE,
+            // KC_PIPE,
         }
 };
 
@@ -98,7 +98,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
   uint8_t mod_state = get_mods();
   switch (keycode)
   {
-    case AKM_1_9 ... AKM_4_11:
+    case AKM_1_9 ... AKM_2_23:
       if (record->event.pressed)
       {
         mod_state = get_mods() & MOD_MASK_SHIFT;
@@ -113,7 +113,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         }
         set_mods(mod_state);
       }
-      break;
+      return false;
 
     case SMILEK:
         if (record->event.pressed) {
@@ -142,7 +142,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     case LANG:
         if (record->event.pressed) {
                 tap_code(KC_CAPSLOCK);
-                layer_invert(LAT_UP);
+                layer_invert(RUS);
         }
         break;
 
@@ -153,29 +153,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAT] = LAYOUT(
-        KC_GRAVE,     KC_EXCLAIM,  KC_AT,  KC_HASH,  KC_DOLLAR, KC_PERCENT, KC_CIRCUMFLEX, KC_QUESTION, KC_ASTERISK, AKM_1_9,  AKM_1_10, AKM_1_11,  AKM_1_12,  AKM_1_13,  AKM_1_14,
+        KC_GRAVE,     KC_EXCLAIM,  KC_AT,  KC_HASH,  KC_DOLLAR, KC_PERCENT, KC_CIRCUMFLEX, KC_QUESTION, KC_ASTERISK, AKM_1_9,  KC_UNDERSCORE, KC_MINUS, KC_EQUAL,  KC_DOUBLE_QUOTE,  AKM_1_14,
         KC_TAB,           KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     AKM_2_22,  AKM_2_23,  KC_BSPC,
-        KC_GESC,            KC_A,       KC_S,    KC_D,    KC_F,    KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     AKM_3_11,  KC_QUOT,  KC_ENT,
-        KC_LSHIFT,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   AKM_4_11,  _______,  TT(LAT_UP),
-        KC_LCTL,        KC_LGUI,          KC_LALT,    MO(NAV),    KC_ENT,                 KC_SPC,                 MO(NUM),    KC_GRV,   TG(NUM),    KC_RGHT,  KC_WH_D),
+        KC_GESC,            KC_A,       KC_S,    KC_D,    KC_F,    KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_COLON,  KC_QUOT,  KC_ENT,
+        KC_LSHIFT,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLASH,  KC_UP,  LANG,
+        KC_LCTL,        KC_LGUI,          KC_LALT,    MO(FN),    KC_ENT,                 KC_SPC,                 MO(FN),    KC_MENU,   KC_LEFT,    KC_DOWN,  KC_RIGHT),
 
-    [LAT_UP] = LAYOUT(
-        TO(LAT),     KC_1,  KC_2,  KC_3,  KC_4, KC_5, KC_6, KC_7, KC_8, KC_9,  KC_0,  KC_UNDS,  KC_COLN,  KC_DQUO,  KC_BSLS,
-        _______,           KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  KC_LBRC,  _______,
+    [RUS] = LAYOUT(
+        _______,     _______,  _______,  _______,  _______, _______, _______, _______, _______, _______,  _______,  _______,  _______,  _______,  KC_RBRACKET,
+        _______,           KC_Q,       KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,  S(KC_SLASH),  _______,
         _______,            KC_A,       KC_S,    KC_D,    KC_F,    KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,  _______,
-        KC_LSHIFT,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  _______,  _______,
+        _______,XXXXXXX,  KC_Z,    KC_X,    KC_C,    KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  _______,  _______,
         _______,        _______,          _______,    _______,    _______,                 _______,                 _______,    _______,   _______,    _______,  _______),
 
-    [NUM] = LAYOUT(
-        _______,    KC_F1,      KC_F2,      KC_F3,      KC_F4,      KC_F5,      KC_F6,      KC_F7,      KC_F8,    KC_F9,   KC_F10,  KC_F11,     KC_F12,     KC_INS,    KC_PAUS,
-        TO(LAT),    RGB_TOG,    RGB_MOD,    RGB_RMOD,   RGB_HUI,    RGB_HUD,    RGB_SPI,    KC_PMNS,    KC_7,     KC_8,    KC_9,    KC_PSLS,    KC_PAST,    KC_PSCR,
-        _______,    RGB_SAI,    RGB_SAD,    _______,    KC_DEL,     RGB_VAI,    RGB_VAD,    KC_BSPC,    KC_4,     KC_5,    KC_6,    _______,    KC_PEQL,
-        _______,    XXXXXXX,    RGB_M_P,    RGB_M_R,    RGB_M_X,    RGB_M_G,    RGB_M_SW,   RGB_SPD,    KC_PPLS,  KC_1,    KC_2,    KC_3,       KC_LEFT,    KC_RGHT,
-        _______,    _______,    _______,    _______,    _______,    _______,    KC_0,       KC_PDOT,    _______,  _______, _______),
+    [FN] = LAYOUT(
+        RESET,    KC_F1,      KC_F2,      KC_F3,      KC_F4,      KC_F5,      KC_F6,      KC_F7,      KC_F8,    KC_F9,   KC_F10,  KC_F11,     KC_F12,     KC_INS,    KC_PAUS,
+        _______,    RGB_TOG,    RGB_MOD,    RGB_RMOD,   RGB_HUI,    RGB_HUD,    RGB_SPI,    KC_KP_MINUS,    KC_7,     KC_8,    KC_9,    KC_KP_ASTERISK,    KC_KP_SLASH,    KC_PSCR,
+        _______,    RGB_SAI,    RGB_SAD,    _______,    KC_DEL,     KC_HOME,    KC_END,    KC_BSPC,    KC_4,     KC_5,    KC_6,    KC_KP_EQUAL,    KC_PDOT,
+        _______,    XXXXXXX,    RGB_M_P,    RGB_M_R,    RGB_M_X,    RGB_M_G,    RGB_M_SW,   RGB_SPD,    KC_KP_PLUS,  KC_1,    KC_2,    KC_3,       _______,    _______,
+        _______,    _______,    _______,    _______,    _______,    KC_0,    _______,       _______,    _______,  _______, _______),
 
     [NAV] = LAYOUT(
-        SMILE,     UC(0xBD20),  RUB_SIGN,   UNICODE_MODE_LNX,   UNICODE_MODE_WIN,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   KC_P0,   RESET,
-        _______,   _______,     KC_VOLU,   _______,    KC_PGUP,   _______,   _______,   KC_PGUP,   _______,   KC_UP,   _______,   _______,   _______,   _______,   _______,
+        SMILE,     _______, _______,   UNICODE_MODE_LNX,   UNICODE_MODE_WIN,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   _______,   KC_P0,   RESET,
+        _______,   _______,     KC_VOLU,   _______,    RUB_SIGN,   _______,   _______,   KC_PGUP,   _______,   KC_UP,   _______,   _______,   _______,   _______,   _______,
         KC_MPRV,   KC_VOLD,     KC_MNXT,   KC_DEL,     KC_HOME,   KC_END,   KC_BSPC,   KC_LEFT,   KC_DOWN,   KC_RGHT,   _______,   _______,
         _______,   XXXXXXX,     SMILEK,   QMKURL,    MY_OTHER_MACRO,   KC_PGDN,   _______,   _______,   KC_PGDN,   _______,   _______,   _______,   LANG,   _______,
         _______,   _______,     _______,   _______,    _______,   _______,   _______,   _______,   _______,   _______,   _______),
